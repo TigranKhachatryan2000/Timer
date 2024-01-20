@@ -1,5 +1,7 @@
-import React, { useEffect, useRef } from 'react';
-import { useState } from 'react';
+import React, { useEffect, useRef } from "react";
+import { useState } from "react";
+
+import "./Timer.css";
 
 let timerID;
 
@@ -9,42 +11,40 @@ function Timer() {
   const buttonRef = useRef();
 
   const handleStart = (e) => {
-     e.preventDefault();
-     setRunningTime(e.target.value);
-  }
-  
+    e.preventDefault();
+    setRunningTime(e.target.value);
+  };
+
   const handleClickStartStop = () => {
-    // debugger;
-    if(isRunning) {
+    if (isRunning) {
       clearInterval(timerID);
       setIsRunning(false);
     } else {
       timerID = setInterval(() => {
-        setRunningTime(runningTime => runningTime - 1);
+        setRunningTime((runningTime) => runningTime - 1);
         setIsRunning(true);
       }, 1000);
-      if( runningTime === 1 ) {
+      if (runningTime === 1) {
         buttonRef.current.disabled = true;
       }
     }
-}
+  };
 
-console.log(runningTime);
+  console.log(runningTime);
 
   useEffect(() => {
-    if( runningTime === 1 ) {
+    if (runningTime === 1) {
       return () => {
         clearInterval(timerID);
-        console.log('unmounted');
-      }
+        console.log("unmounted");
+      };
     }
   });
 
-
   function formatTime(t) {
     let h = Math.floor(t / 3600);
-    let m = Math.floor(t % 3600 / 60);
-    let s = Math.floor(t % 3600 % 60);
+    let m = Math.floor((t % 3600) / 60);
+    let s = Math.floor((t % 3600) % 60);
     let hDisplay = h >= 0 ? h + (h === 1 ? " hour : " : " hours : ") : "";
     let mDisplay = m >= 0 ? m + (m === 1 ? " minute : " : " minutes : ") : "";
     let sDisplay = s >= 0 ? s + (s === 1 ? " second" : " seconds") : "";
@@ -56,23 +56,32 @@ console.log(runningTime);
     setRunningTime(0);
     buttonRef.current.disabled = false;
     clearInterval(timerID);
-  }
+  };
 
   return (
-    <> 
-        <div>
-         <input type='number' onChange={handleStart}/>
-         <h1> {formatTime(runningTime)} </h1>
-         <button onClick={handleClickStartStop}  ref={buttonRef}> {isRunning ? 'Stop' : 'Start'} </button>
-         <button onClick={handleResetClick}> Reset </button>
-        </div>
+    <>
+      <div className="app">
+        <input type="number" onChange={handleStart} />
+        <h1 className="time">{formatTime(runningTime)}</h1>
+        <button
+          onClick={handleClickStartStop}
+          ref={buttonRef}
+          className="button button-primary"
+        >
+          {isRunning ? "Stop" : "Start"}
+        </button>
+        <button
+          onClick={handleResetClick}
+          className="button button-primary-inactive"
+        >
+          Reset
+        </button>
+      </div>
     </>
-  )
+  );
 }
 
 export default Timer;
-
-
 
 // import React from "react";
 
@@ -142,5 +151,3 @@ export default Timer;
 // }
 
 // export default Timer;
-
-
